@@ -1,6 +1,29 @@
-# 도커(Docker)
+# 도커란(Docker)
 
-> 2013년에 등장한 리눅스 컨테이너를 기반으로 하여 특정한 서비스를 패키징하고 배포하는데 유용한 오픈소스 프로그램
+## 목차
+
+- [도커(Docker) 정의](#도커(Docker)-정의)
+- [왜 사용할까?](#왜-사용할까?)
+- [Windows10 환경에서의 도커(Docker) 설치](#Windows10-환경에서의-도커(Docker)-설치)
+- [도커(Docker) 기본 명령어](#도커(Docker)-기본-명령어)
+- [프로젝트 도커화](#프로젝트-도커화)
+  - [프론트엔드 도커 이미지](#프론트엔드-도커-이미지)
+  - [백엔드 도커 이미지](#백엔드-도커-이미지)
+- [학습을 위한 참고자료](#학습을-위한-참고자료)
+
+------
+
+## 도커(Docker) 정의
+
+> 2013년에 등장한 리눅스 **컨테이너**를 기반으로 하여 특정한 **서비스를 패키징하고 배포하는데 유용한 오픈소스 프로그램**
+
+- 도커에서 의미하는 **컨테이너**란?
+
+  - 택배나 화물선 위에 수출 용품을 싣는 컨테이너를 대신하여 **프로그램(소프트웨어)을 담는 격리된 공간을** 의미
+  - 각각의 격리된 여러개의 소프트웨어 컨테이너에는 ubuntu, centos등의 운영체제, java, python, 아파치 웹서버나, mysql 같은 dbms 등의 프로그램들 까지도 담기게 된다
+  - 각 컨테이너는 격리된 공간이기 때문에 한 컨테이너가 해킹을 당하던, 한 컨테이너에 문제가 생기더라도 컨테이너간에 영향을 끼치지 않는다.
+
+  
 
 ## 왜 사용할까?
 
@@ -12,18 +35,20 @@
 
 
 
-## Windows 환경에서의 도커(Docker) 설치
+## Windows10 환경에서의 도커(Docker) 설치
 
 1. 컴퓨터 하드웨어의 BIOS 레벨에서 **가상화(Virtualization)** 지원 및 활성화
 
-   - 작업 관리자 > 성능에서 **'가상화: 사용'** 으로 되어 있는지 확인
-   - 사용 안 함으로 되어 있다면, 컴퓨터를 재부팅하고 BIOS로 진입하여 해당 옵션을 Enabled로 설정한 다음 다시 확인한다.
+   - `작업 관리자 > 성능`에서 **'가상화: 사용'** 으로 되어 있는지 확인한 다음, `제어판 > Window 기능 켜기/끄기`에서 **Hyper-V** 체크 확인 후 **리부팅**
+   - **'가상화: 사용 안 함'**으로 되어 있다면, 컴퓨터를 재부팅하고 **BIOS**로 진입하여 해당 옵션을 **Enabled**로 설정한 다음 다시 확인한다.
 
 2. 사이트에서 OS에 맞는 버전 설치
 
    - https://www.docker.com/products/docker-desktop
 
-3. **PowerShell**을 통해 도커(Docker) 설치 확인
+3. 도커(Docker)를 사용하기 위해 **회원 가입** 진행
+
+4. **PowerShell**을 통해 도커(Docker) 설치 확인
 
    - 실행 창 열고 PowerShell 검색
 
@@ -35,7 +60,9 @@
    docker run hello-world
    ```
 
-   > hello world 도커 이미지가 자동 다운로드되어 실행된 결과로 "Hello from Docker!"가 포함된 메시지가 출력되면 성공!
+   > *hello world 도커 이미지가 자동 다운로드되어 실행된 결과로 "Hello from Docker!"가 포함된 메시지가 출력되면 성공!*
+
+- 도커실행 시 **WSL2 관련 오류 메시지** 나온다면 WSL2 설치
 
 
 
@@ -61,8 +88,9 @@
    docker rm [컨테이너 ID 또는 NAME]
    ```
 
-   > - *컨테이너 실행 시 `docker run --name=[컨테이너 이름] ~` 과 같이 --name 옵션을 추가하면 자동으로 만들어진 이름 대신 지정된 이름으로 생성 가능*
-   > - *컨테이너 ID는 앞 일부분만 입력 가능*
+   > *컨테이너 실행 시 `docker run --name=[컨테이너 이름] ~` 과 같이 --name 옵션을 추가하면 자동으로 만들어진 이름 대신 지정된 이름으로 생성 가능*.
+   >
+   > *컨테이너 ID는 앞 일부분만 입력 가능*.
 
 3. 도커 이미지 조회
 
@@ -76,7 +104,7 @@
    docker rmi [이미지 ID 또는 이미지명:TAG명]
    ```
 
-   > TAG 중에 latest 태그명은 생략 가능
+   > *TAG 중에 latest 태그명은 생략 가능*.
 
 
 
@@ -84,16 +112,12 @@
 
 > 도커(Docker)를 사용해서 실제 프로젝트를 도커화(Dockerize)한다.
 
-프로젝트 코드 다운로드
+**프로젝트 코드 다운로드**
 
 ```shell
 # happyhouse를 예시로 사용
 git clone https://github.com/KJY97/happyhouse.git
-<<<<<<< HEAD
 cd happyhouse
-=======
-cd s06p10b158
->>>>>>> ccfb482c14f83a55b8ee2f74c7f963279bceff51
 ```
 
 ### 프론트엔드 도커 이미지
@@ -101,15 +125,16 @@ cd s06p10b158
 1. 로컬에서 프론트엔드 실행 및 웹 브라우저로 접속
 
    ```shell
-   cd fianl_happyhouse_frontend
+   cd fianl_happyhouse_frontend # cd 프로젝트_이름
    npm install
    npm run serve
    ```
 
-2. 프론트엔드 프로젝트 root 밑에 Dockerfile 생성
+2. 프론트엔드 프로젝트 root 밑에 Dockerfile 생성 **(확장자 없는 Dockerfile)**
 
-   - 해당 프로젝트는 Vue를 이용하여 개발했다.
+   - 해당 프로젝트는 **Vue**를 이용하여 개발했다.
    - Dockerfile 작성 참고 : [Dockerize Vue.js App Docs](https://kr.vuejs.org/v2/cookbook/dockerize-vuejs-app.html)
+   - 개발환경이 아닌 운영환경에서 많이 사용하는 NGINX 예제 사용 권장
 
 ```shell
 # build stage
@@ -135,7 +160,14 @@ docker build . -t front:0.1
 docker images
 ```
 
-> *front는 image 이름, 0.1은 TAG를 의미한다.*
+> *front는 image 이름, 0.1은 TAG를 의미한다.*<br/>*-t : 도커 이미지 TAG명. 보통 버전 관리 용도로 사용*
+>
+> *도커 이미지 빌드시 `sh: vue-cli-service: not found`가 발생하면 아래와 같은 내용 추가<br/>*
+>
+> ```
+> RUN npm install --production
+> RUN npm install @vue/cli-service
+> ```
 
 4. 도커로 프론트엔드 실행 및 웹 브라우저 접속
 
@@ -143,7 +175,9 @@ docker images
 docker run -it -p 8080:80 --rm front:0.1
 ```
 
-
+> *--rm : 컨테이너가 정지되면 자동으로 삭제되는 옵션. 임시테스트용 컨테이너를 실행시켜 보는 용도로 유용함*<br/>*키  `Ctrl + C` : 실행 종료*
+>
+> *주의 : 8080 포트가 사용 중이면 오류 발생함. cmd에서 8080 port 죽이기*
 
 ### 백엔드 도커 이미지
 
@@ -152,25 +186,25 @@ docker run -it -p 8080:80 --rm front:0.1
    - http://localhost:9999/happyhouse/swagger-ui.html
 
    ```shell
-<<<<<<< HEAD
-   cd final_happyhouse
-=======
-   cd \final_happyhouse
->>>>>>> ccfb482c14f83a55b8ee2f74c7f963279bceff51
+cd final_happyhouse
    ./mvnw package
-   java -jar target\final_happyhouse-0.0.1-SNAPSHOT.war
-   ```
+java -jar target\final_happyhouse-0.0.1-SNAPSHOT.war
 
-2. 백엔드 프로젝트 root 밑에 Dockerfile 생성
+2. 백엔드 프로젝트 root 밑에 Dockerfile 생성 **(확장자 없는 Dockerfile)**
 
    - 해당 프로젝트는 Spring boot를 이용하여 개발했다.
    - Dockerfile 작성 참고 : [Spring Boot with Docker](https://spring.io/guides/gs/spring-boot-docker/)
 
    ```shell
-   FROM openjdk:8-jdk-alpine
+   # openjdk 8 위에서 실행된다는 뜻
+   FROM openjdk:8-jdk-alpine 
+   # JAR_FILE을 이용해 어떤 어플리케이션의 실행파일을 연결한다
    ARG JAR_FILE=target/*.war
+   # 도커 컨테이너 내부에서는 9999 포트를 가지고 돈다
    EXPOSE 9999
+   # JAR_FILE를 이름으로 복사
    COPY ${JAR_FILE} app.war
+   # Run the jar file
    ENTRYPOINT ["java","-jar","/app.war"]
    ```
 
@@ -190,54 +224,98 @@ docker run -it -p 8080:80 --rm front:0.1
    docker run -it -p 8080:9999 --rm back:0.1
    ```
 
-5. 개발용 DB로 사용할 MySQL 컨테이너 실행 및 실행 여부 조회
+### MySQL 설치 및 접속
+
+1. 개발용 DB로 사용할 MySQL 컨테이너 실행 및 실행 여부 조회
 
    ```shell
-   docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=ssafyroom -e MYSQL_DATABASE=ssafy -d mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+   docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD="password" -e MYSQL_DATABASE="dbname" -d mysql --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+   #password: 2216, dbname: ssafy - happyhouse 기준
    
    docker ps
    ```
 
    > *-p: 포트 포워딩 호스트:컨테이너*<br/>
-   > *-e: 컨테이너 내에서 사용할 환경변수 설정*<br/>*-d: 백그라운드 모드*<br/>*–name: 컨테이너 이름*<br/>*--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci: 한글이 깨지지 않도록 UTF8 설정*
+   > *-e (-env): 컨테이너 내에서 사용할 환경변수 설정*<br/>*-d: 백그라운드 모드*<br/>*–name: 컨테이너 이름*<br/>*--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci: 한글이 깨지지 않도록 UTF8 설정*
 
-   - 위 명령어를 실행하여 컨테이너를 올려도 되지만 아래와 같이 docker-compose.yml 파일로 만들어서 실행할 수 있다.
-
-     5-1. docker-compose.yml 파일 생성
-
-     ```shell
-     version: "3" # 파일 규격 버전
-     services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
-       db: # 서비스 명
-         image: mysql # 사용할 이미지
-         container_name: mysql # 컨테이너 이름 설정
-         ports:
-           - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
-         environment: # -e 옵션
-           MYSQL_ROOT_PASSWORD: "password"  # MYSQL 패스워드 설정 옵션
-         command: # 명령어 실행
-           - --character-set-server=utf8mb4
-           - --collation-server=utf8mb4_unicode_ci
-     ```
-
-     5-2. docker-compose 파일 실행
-
-     ```shell
-     docker-compose up -d
-     ```
-
-6. MySQL 서버 컨테이너 안에 포함되어 있는 mysql 클라이언트 명령어 실행 및 DB 접속 테스트
+2. MySQL 서버 컨테이너 안에 포함되어 있는 mysql 클라이언트 명령어 실행 및 DB 접속 테스트
 
    ```shell
-   docker exec -it mysql
-   mysql -uroot -p ssafy
+   docker exec -it mysql bash # mysql 실행
+   mysql -uroot -p ssafy # DB 접속
+   show databases; # 현재 계정이 접근 가능한 DB 목록
+   show tables; # 현재 DB의 table 목록
+   exit # 접속 종료
+   ```
+
+   > *docker exec -it mysql mysql -uroot -p ssafy : 한줄로 실행할 수 있다.*
+   >
+   > *주의: `Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`가 발생하면 다음 코드 실행<br/> `service mysql restart`*
+
+### docker-compose 실행
+
+> 프론트엔드, 백엔드, DB까지 포함시켜 한번에 실행해보기
+
+- docker 실행 옵션을 미리 작성하고 편하게 사용하기 위함
+- frontend, backend, DB, webserver를 각각 컨테이너로 사용했다
+
+1. `docker-compose.yml` 파일 생성
+
+   ```yml
+   version: "3" # 파일 규격 버전
+   services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
+     frontend:
+       image: front:0.1
+       build: 
+         context: ./fianl_happyhouse_frontend
+         dockerfile: Dockerfile
+       ports:
+         - "8080:8080"
+         
+     nginx:
+       build:
+         dockerfile: Dockerfile
+         context: ./nginx
+       port:
+         - "80:80"
+       depends_on:
+         - frontend
+         
+     backend:
+       image: back:0.1
+       build: 
+         context: ./final_happyhouse
+         dockerfile: Dockerfile
+       ports:
+         - "9999:9999"
+         
+     db: # 서비스 명
+       image: mysql # 사용할 이미지
+       restart: always
+       container_name: mysql # 컨테이너 이름 설정
+       ports:
+         - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)
+       environment: # -e 옵션
+         MYSQL_ROOT_PASSWORD: 2216  # MYSQL 패스워드 설정 옵션
+         MYSQL_DATABASE: ssafy
+       command: # 명령어 실행
+         - --character-set-server=utf8mb4
+         - --collation-server=utf8mb4_unicode_ci
+   ```
+
+2. docker-compose 파일 실행
+
+   ```shell
+   docker-compose up -d
    ```
 
    
 
 ## 학습을 위한 참고자료
 
-- https://www.youtube.com/playlist?list=PLApuRlvrZKogb78kKq1wRvrjg1VMwYrvi
-- https://www.44bits.io/ko/post/easy-deploy-with-docker
-- https://hub.docker.com/_/mysql
+- https://www.youtube.com/playlist?list=PLApuRlvrZKogb78kKq1wRvrjg1VMwYrvi [따배도 도커 시리즈]
+- https://www.44bits.io/ko/post/easy-deploy-with-docker [도커 튜토리얼]
+- https://hub.docker.com/_/mysql [도커_mysql]
+- https://m.blog.naver.com/hj_kim97/222315587407 [도커_mysql 사용]
+- https://dongyeopgu.github.io/server/docker-compose-%EC%9D%B4%EC%9A%A9%ED%95%98%EA%B8%B0.html [docker-compose]
 
