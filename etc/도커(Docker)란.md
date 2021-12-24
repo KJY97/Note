@@ -82,13 +82,14 @@
 
 ## 프로젝트 도커화
 
-도커(Docker)를 사용해서 실제 프로젝트를 도커화(Dockerize)한다.
+> 도커(Docker)를 사용해서 실제 프로젝트를 도커화(Dockerize)한다.
 
 프로젝트 코드 다운로드
 
 ```shell
-git clone https://lab.ssafy.com/s06-study/s06p10b158.git
-cd s06p10b158
+# happyhouse를 예시로 사용
+git clone https://github.com/KJY97/happyhouse.git
+cd happyhouse
 ```
 
 ### 프론트엔드 도커 이미지
@@ -96,7 +97,7 @@ cd s06p10b158
 1. 로컬에서 프론트엔드 실행 및 웹 브라우저로 접속
 
    ```shell
-   cd frontend
+   cd fianl_happyhouse_frontend
    npm install
    npm run serve
    ```
@@ -147,7 +148,7 @@ docker run -it -p 8080:80 --rm front:0.1
    - http://localhost:9999/happyhouse/swagger-ui.html
 
    ```shell
-   cd backend\final_happyhouse
+   cd final_happyhouse
    ./mvnw package
    java -jar target\final_happyhouse-0.0.1-SNAPSHOT.war
    ```
