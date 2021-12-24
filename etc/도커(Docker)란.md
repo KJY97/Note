@@ -89,7 +89,11 @@
 ```shell
 # happyhouse를 예시로 사용
 git clone https://github.com/KJY97/happyhouse.git
+<<<<<<< HEAD
 cd happyhouse
+=======
+cd s06p10b158
+>>>>>>> ccfb482c14f83a55b8ee2f74c7f963279bceff51
 ```
 
 ### 프론트엔드 도커 이미지
@@ -148,7 +152,11 @@ docker run -it -p 8080:80 --rm front:0.1
    - http://localhost:9999/happyhouse/swagger-ui.html
 
    ```shell
+<<<<<<< HEAD
    cd final_happyhouse
+=======
+   cd \final_happyhouse
+>>>>>>> ccfb482c14f83a55b8ee2f74c7f963279bceff51
    ./mvnw package
    java -jar target\final_happyhouse-0.0.1-SNAPSHOT.war
    ```
