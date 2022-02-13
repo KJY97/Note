@@ -54,7 +54,11 @@
   Hello from Docker! ⋯ ⋯
   ```
 
+### 참고. Docker Compose 설치
 
+> [공식 문서](https://docs.microsoft.com/ko-kr/visualstudio/docker/tutorials/use-docker-compose)에 따르면 Window 또는 Mac용 Docker Desktop을 설치한 경우 이미 Docker Compose가 있다. 따로 설치안해도 됨
+
+<br/>
 
 ## Ubuntu에 Docker 설치
 
@@ -139,5 +143,24 @@
   $ sudo service docker restart
   ```
 
-  
+### 참고. Docker Compose 설치
 
+> Install Compose on Linux 공식문서 : https://docs.docker.com/compose/install/
+
+- Docker compose 설치
+
+  ```bash
+   # Docker Compose 다운로드
+   $ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+   # 실행 권한 적용
+   $ chmod +x /usr/local/bin/docker-compose
+
+   # 심볼릭 링크 설정
+   $ ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+   ``` 
+- 설치 확인
+  ```bash
+   $ docker-compose --version
+   docker-compose version 1.28.5, build c4eb3a1f
+  ```
