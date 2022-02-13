@@ -4,11 +4,14 @@
 
 ## 목차
 
-1. [사전 환경 준비](#1.-사전-환경-준비)
-2. [Frontend 도커 이미지 저장](2.-FrondEnd-도커-이미지-저장)
-3. [BackEnd 도커 이미지 저장](3.-BackEnd-도커-이미지-저장)
-4. [개발용 DB (MySQL) 설치 및 접속](4.-개발용-DB-(MySQL)-설치 및-접속)
-5. [번외. docker-compose로 실행](#번외.-docker-compose로-실행)
+- [Dockerize Project](#dockerize-project)
+  - [목차](#목차)
+  - [1. 사전 환경 준비](#1-사전-환경-준비)
+  - [2. FrontEnd 도커 이미지 저장](#2-frontend-도커-이미지-저장)
+  - [3. BackEnd 도커 이미지 저장](#3-backend-도커-이미지-저장)
+  - [4. 개발용 DB (MySQL) 설치 및 접속](#4-개발용-db-mysql-설치-및-접속)
+  - [번외. docker-compose로 실행](#번외-docker-compose로-실행)
+  - [참고](#참고)
 
 [참고](#참고)
 
@@ -16,7 +19,7 @@
 
 ## 1. 사전 환경 준비
 
-- [Docker Install](Docker Install.md) 를 보고 도커 설치한다.
+- [Docker Install](Docker-Install.md) 를 보고 도커 설치한다.
 
 - 프로젝트를 로컬에 저장한다.
 
@@ -26,7 +29,7 @@
   cd happyhouse
   ```
 
-- 도커 명령어는 [이 문서](도커 명령어.md)를 참고한다.
+- 도커 명령어는 [이 문서](도커-명령어.md)를 참고한다.
 
 ## 2. FrontEnd 도커 이미지 저장
 
@@ -47,19 +50,38 @@
   - 개발환경이 아닌 운영환경에서 많이 사용하는 **NGINX** 예제 사용 권장
 
   ```sh
-  # build stage
+  ## build stage start
+
+  # 기본 이미지는 node:alpine. 별칭으로 build-stage 지정
   FROM node:lts-alpine as build-stage
+
+  # 작업디렉토리 /app로 이동
   WORKDIR /app
+
+  # package*.json를 작업디렉토리로 복사
   COPY package*.json ./
-  
-  RUN npm install --production
+
+  RUN npm install
+
+  # 나머지 파일들을 작업디렉토리로 복사
   COPY . .
+
+  # 빌드 파일 준비
   RUN npm run build
   
-  # production stage
+  ## production run stage
+
+  # 기본 이미지 nginx:stable-alpine
   FROM nginx:stable-alpine as production-stage
+
+  # nginx가 동작하기위해 필요한 파일들을 시스템으로 복사
+  # --from=build-stage를 이용하여 빌드 단계의 이미지 작업디렉토리(/app/build)에서 nginx의 디렉토리로 파일 복사
   COPY --from=build-stage /app/dist /usr/share/nginx/html
+
+  # 80번 포트 사용
   EXPOSE 80
+
+  # Run nginx
   CMD ["nginx", "-g", "daemon off;"]
   ```
 
@@ -112,15 +134,19 @@
   - 해당 프로젝트는 Spring boot를 이용하여 개발했다.
   - Dockerfile 작성 참고 : [Spring Boot with Docker](https://spring.io/guides/gs/spring-boot-docker/)
 
-  ```shell
+  ```sh
   # openjdk 8 위에서 실행된다는 뜻
   FROM openjdk:8-jdk-alpine 
+
   # JAR_FILE을 이용해 어떤 어플리케이션의 실행파일을 연결한다
   ARG JAR_FILE=target/*.war
+
   # 도커 컨테이너 내부에서는 9999 포트를 가지고 돈다
   EXPOSE 9999
-  # JAR_FILE를 이름으로 복사
+
+  # JAR_FILE를 app.war으로 복사
   COPY ${JAR_FILE} app.war
+
   # Run the jar file
   ENTRYPOINT ["java","-jar","/app.war"]
   ```
@@ -152,30 +178,40 @@
   docker ps
   ```
 
-  > *`-p`: 포트 포워딩 호스트:컨테이너*<br/>
-  > *`-e (-env)`: 컨테이너 내에서 사용할 환경변수 설정*<br/>*`-d`: 백그라운드 모드*<br/>*`–name`: 컨테이너 이름*<br/>*`--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci`: 한글이 깨지지 않도록 UTF8 설정*
+  > *`-p` : 포트 포워딩 호스트 : 컨테이너*<br/>
+  > *`-e (-env)` : 컨테이너 내에서 사용할 환경변수 설정*<br/>*`-d` : 백그라운드 모드*<br/>*`–name` : 컨테이너 이름*<br/>*`--character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci` : 한글이 깨지지 않도록 UTF8 설정*
 
 - MySQL 서버 컨테이너 안에 포함되어 있는 mysql 클라이언트 명령어 실행 및 DB 접속 테스트
 
-  ```shell
-  docker exec -it mysql bash # mysql 실행
-  mysql -uroot -p ssafy # DB 접속
-  show databases; # 현재 계정이 접근 가능한 DB 목록
-  show tables; # 현재 DB의 table 목록
-  exit # 접속 종료
+  ```sh
+  # mysql 실행
+  docker exec -it mysql bash
+
+  # DB 접속
+  mysql -uroot -p ssafy 
+
+  # 현재 계정이 접근 가능한 DB 목록
+  show databases; 
+
+  # 현재 DB의 table 목록
+  show tables; 
+  
+  # 접속 종료
+  exit
   ```
 
   > *docker exec -it mysql mysql -uroot -p ssafy : 한줄로 실행할 수 있다.*
   >
-  > *주의: `Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`가 발생하면 다음 코드 실행<br/> `service mysql restart`*
+  > *주의 : `Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`가 발생하면 다음 코드 실행<br/> `service mysql restart`*
 
 ## 번외. docker-compose로 실행
 
 > 프론트엔드, 백엔드, DB까지 포함시켜 한번에 실행해보기
 
 - docker 실행 옵션을 미리 작성하고 편하게 사용하기 위함
-- frontend, backend, DB, webserver를 각각 컨테이너로 사용했다
+- frontend, backend, DB, webserver를 각각 컨테이너로 사용했다.
 
+0. 먼저 [이 문서](Docker-Install.md)를 참고하여 현재 OS가 Docker-compose가 설치되어 있는지 사전 체크
 1. `docker-compose.yml` 파일 생성
 
    ```yml
@@ -183,23 +219,16 @@
    services: # 이 항목 밑에 실행하려는 컨테이너 들을 정의
      frontend:
        image: front:0.1
+       container_name: front
        build: 
          context: ./fianl_happyhouse_frontend
          dockerfile: Dockerfile
        ports:
-         - "8080:8080"
-         
-     nginx:
-       build:
-         dockerfile: Dockerfile
-         context: ./nginx
-       port:
-         - "80:80"
-       depends_on:
-         - frontend
+         - "8080:80"
          
      backend:
        image: back:0.1
+       container_name: back
        build: 
          context: ./final_happyhouse
          dockerfile: Dockerfile
@@ -215,22 +244,35 @@
        environment: # -e 옵션
          MYSQL_ROOT_PASSWORD: 2216  # MYSQL 패스워드 설정 옵션
          MYSQL_DATABASE: ssafy
+        environment:
+          - TZ=Asia/Seo
        command: # 명령어 실행
          - --character-set-server=utf8mb4
          - --collation-server=utf8mb4_unicode_ci
    ```
-
-2. docker-compose 파일 실행
-
-   ```shell
-   docker-compose up -d
+2. docker에서 실행되고 있는 모든 images와 container 삭제
+   
+   ```sh
+   docker rm [컨테이너 ID 또는 NAME]
+   docker rmi docker rmi [이미지 ID 또는 이미지명:TAG명]
    ```
 
-   
+3. docker-compose 파일 실행
 
+   ```sh
+   docker-compose up -d
+   ```
+   > `-d` : 모든 명령을 백그라운드에서 실행
+   
+4. images와 container가 생성되었는지 확인
+   
+   ```sh
+   docker ps
+   docker images
+   ```
+   
 ## 참고
 
 - Vue Dockerfile : https://kr.vuejs.org/v2/cookbook/dockerize-vuejs-app.html
-
 - Spring Dockerfile : https://spring.io/guides/gs/spring-boot-docker/
 - DB : https://poiemaweb.com/docker-mysql
